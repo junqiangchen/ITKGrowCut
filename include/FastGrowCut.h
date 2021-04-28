@@ -37,9 +37,10 @@
 #include <stdlib.h>
 #include <fstream>
 #include <iterator>
+#include <limits>
 
-#include "fibheap.h"
-#include "HeapNode.h"
+#include "FibHeap.h"
+
 namespace FGC
 {
 
@@ -85,9 +86,9 @@ private:
   std::vector<int>           m_indOff;
   std::vector<unsigned char> m_NBSIZE;
 
-  FibHeap               m_heap;
-  std::vector<HeapNode> m_hpNodes;
-  bool                  m_bSegInitialized{ false };
+  FibHeap                  m_heap;
+  std::vector<FibHeapNode> m_hpNodes;
+  bool                     m_bSegInitialized{ false };
 };
 } // end namespace FGC
 

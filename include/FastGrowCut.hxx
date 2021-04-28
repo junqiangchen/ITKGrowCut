@@ -36,7 +36,6 @@
 #include "itkImageRegionIteratorWithIndex.h"
 #include "itkNumericTraits.h"
 #include "itkRegionOfInterestImageFilter.h"
-#include "HeapNode.h"
 
 namespace FGC
 {
@@ -84,7 +83,6 @@ FastGrowCut<SrcPixelType, LabPixelType>::InitializationAHP()
   m_DIMXYZ = m_DIMXY * m_DIMZ;
 
   m_hpNodes.resize(m_DIMXYZ + 1);
-  m_heap.ClearHeapOwnership();
 
   long i, j, k, index;
   if (!m_bSegInitialized)
@@ -164,7 +162,7 @@ void
 FastGrowCut<SrcPixelType, LabPixelType>::DijkstraBasedClassificationAHP()
 {
 
-  HeapNode *   hnMin, hnTmp;
+  FibHeapNode *hnMin, hnTmp;
   float        t, tOri, tSrc;
   long         i, index, indexNgbh;
   LabPixelType labSrc;
@@ -181,7 +179,7 @@ FastGrowCut<SrcPixelType, LabPixelType>::DijkstraBasedClassificationAHP()
   {
     while (!m_heap.IsEmpty())
     {
-      hnMin = (HeapNode *)m_heap.ExtractMin();
+      hnMin = (FibHeapNode *)m_heap.ExtractMin();
       index = hnMin->GetIndexValue();
       tSrc = hnMin->GetKeyValue();
 
@@ -210,10 +208,7 @@ FastGrowCut<SrcPixelType, LabPixelType>::DijkstraBasedClassificationAHP()
         {
           m_imDist[indexNgbh] = t;
           m_imLab[indexNgbh] = labSrc;
-
-          hnTmp = m_hpNodes[indexNgbh];
-          hnTmp.SetKeyValue(t);
-          m_heap.DecreaseKey(&m_hpNodes[indexNgbh], hnTmp);
+          m_heap.DecreaseKey(&m_hpNodes[indexNgbh], t);
         }
       }
 
@@ -237,7 +232,7 @@ FastGrowCut<SrcPixelType, LabPixelType>::DijkstraBasedClassificationAHP()
   {
     while (!m_heap.IsEmpty())
     {
-      hnMin = (HeapNode *)m_heap.ExtractMin();
+      hnMin = (FibHeapNode *)m_heap.ExtractMin();
       index = hnMin->GetIndexValue();
       tSrc = hnMin->GetKeyValue();
       labSrc = m_imLab[index];
@@ -255,10 +250,7 @@ FastGrowCut<SrcPixelType, LabPixelType>::DijkstraBasedClassificationAHP()
         {
           m_imDist[indexNgbh] = t;
           m_imLab[indexNgbh] = labSrc;
-
-          hnTmp = m_hpNodes[indexNgbh];
-          hnTmp.SetKeyValue(t);
-          m_heap.DecreaseKey(&m_hpNodes[indexNgbh], hnTmp);
+          m_heap.DecreaseKey(&m_hpNodes[indexNgbh], t);
         }
       }
 
